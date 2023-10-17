@@ -15,7 +15,7 @@
         "vue": "^3.3.4",
         "vue-star-rating": "^2.1.0",
         "vue3-star-ratings": "^3.0.4",
-        "vuex": "^4.1.0"
+        "vuex": "^4.0.2"
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "^4.2.3",

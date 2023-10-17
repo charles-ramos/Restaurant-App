@@ -24,7 +24,7 @@
                 </div>
                 <div>
                     <span>Filter: </span>
-                    <div class="badge badge-primary">{{ restaurant.filter_name }}</div>
+                    <div class="badge badge-primary">{{ restaurant.filter_type }}</div>
                 </div>
                 <span
                     >Address: <a :href="restaurant.addressLink">{{ restaurant.formatted_address }}</a>
@@ -41,18 +41,22 @@
                 <div class="card-actions">
                     <span>Others Rating</span>
                     <star-rating :rating="restaurant.rating" :read-only="true" :round-start-rating="false" />
-                    <span>Jonathan's Rating</span>
-                    <star-rating :rating="restaurant.valyas_rating" :read-only="true" :round-start-rating="false" />
-                    <span>Valya's Rating</span>
-                    <star-rating :rating="restaurant.jonathans_rating" :read-only="true" :round-start-rating="false" />
+                    <div v-if="restaurant.jonathans_rating > 0">
+                        <span>Valya's Rating</span>
+                        <star-rating :rating="restaurant.jonathans_rating" :read-only="true" :round-start-rating="false" />
+                    </div>
+                    <div v-if="restaurant.valyas_rating > 0">
+                        <span>Jonathan's Rating</span>
+                        <star-rating :rating="restaurant.valyas_rating" :read-only="true" :round-start-rating="false" />
+                    </div>
                 </div>
                 <div class="bg-white p-8 rounded shadow-lg">
                     <h2 class="text-2xl font-bold mb-6">Review</h2>
-                    <div class="bg-gray-100 p-4 rounded-lg mb-4">
+                    <div class="bg-gray-100 p-4 rounded-lg mb-4" v-if="restaurant.jonathan_review !== 'null'">
                         <h3 class="text-xl font-semibold mb-2">Jonathan's Review</h3>
                         <p class="text-base text-gray-700">{{ restaurant.jonathan_review }}</p>
                     </div>
-                    <div class="bg-gray-100 p-4 rounded-lg">
+                    <div class="bg-gray-100 p-4 rounded-lg" v-if="restaurant.valya_review !== 'null'">
                         <h3 class="text-xl font-semibold mb-2">Valya's Review</h3>
                         <p class="text-base text-gray-700">{{ restaurant.valya_review }}</p>
                     </div>
@@ -73,6 +77,7 @@
     import StarRating from 'vue-star-rating';
     import Restaurant from './Restaurant.vue';
     import axios from 'axios';
+    import {mapActions, mapState} from 'vuex';
     export default {
         components: {
             StarRating,
@@ -80,32 +85,31 @@
         },
         data() {
             return {
-                restaurants: [],
                 showModal: false,
                 selectedRestaurant: null,
             };
         },
         methods: {
+            ...mapActions(['fetchRestaurants']),
             openModal(selectedRestaurant) {
                 this.showModal = true;
                 this.selectedRestaurant = selectedRestaurant;
-            },
-            async fetchResturants() {
-                const {data} = await axios.get('http://localhost:3000/all');
-                this.restaurants = data;
             },
             handleModal(newModalState) {
                 this.showModal = newModalState;
             },
         },
+        computed: {
+            ...mapState(['restaurants']),
+        },
         mounted() {
-            this.fetchResturants();
+            this.fetchRestaurants();
         },
         watch: {
             showModal(newModalState) {
                 if (!newModalState) {
                     this.selectedRestaurant = null;
-                    this.fetchResturants();
+                    this.fetchRestaurants();
                 }
             },
         },

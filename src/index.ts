@@ -11,12 +11,14 @@ app.use('/*', cors());
 
 app.get('/search', async (c) => {
     const {name} = c.req.query();
+
     if (name) {
         try {
             const {data} = await axios.get(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${name}&key=AIzaSyCH6Og5niHx0mLXTNh0RGCuWGiiO7E8DaE`);
             return c.json(data);
         } catch (error) {
             console.log('🚀 ~ file: index.ts:15 ~ app.post ~ error:', error);
+            return c.json(error);
         }
     }
 });
@@ -66,7 +68,7 @@ app.post('/save', async (c) => {
             user_ratings_total,
             rating, 
             photos,
-            filter_name
+            filter_type
         )
         VALUES
             (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -87,7 +89,7 @@ app.post('/save', async (c) => {
                 data.user_ratings_total,
                 data.rating,
                 '',
-                '',
+                data.filter_type,
             ];
 
             const result = await queryDB(query, values);
@@ -117,10 +119,12 @@ app.put('/update', async (c) => {
         return;
     }
     const res = await queryDB(`SELECT * FROM restaurants WHERE id = '${id}'`);
+
     if (res) {
         try {
             await queryDB(
-                `UPDATE restaurants SET valyas_rating = '${data.valyasRating}', jonathans_rating = '${data.jonathansRating}', jonathan_review = '${data.jonathansReview}', valya_review = '${data.valyasReview}' WHERE id = '${id}'`
+                `UPDATE restaurants SET valyas_rating = '${data.valyasRating}', jonathans_rating = '${data.jonathansRating}', jonathan_review = '${data.jonathansReview}', valya_review = '${data.valyasReview}', filter_type = '${data.filterType}'
+                WHERE id = '${id}'`
             );
             return c.json(true);
         } catch (error) {

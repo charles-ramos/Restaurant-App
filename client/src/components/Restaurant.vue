@@ -13,6 +13,7 @@
                 <h1 class="text-center text-xl">
                     <strong>{{ restaurant.name }}</strong>
                 </h1>
+                <!-- 'Fast Food', 'Fine Dining', 'Casual Dining', 'Café', 'Bar') -->
                 <figure class="w-full">
                     <img
                         class="w-full h-auto"
@@ -21,8 +22,18 @@
                     />
                 </figure>
                 <div class="mt-3">
-                    <span>Filter: </span>
-                    <div class="badge badge-primary">{{ restaurant.filter_name }}</div>
+                    <label for="filter">Filter: </label>
+                    <div class="inline-block" v-if="restaurant.filter_type === null">
+                        <select name="filter option" id="filter" v-model="filterType">
+                            <option value="null">Select Filter</option>
+                            <option value="Fast Food">Fast Food</option>
+                            <option value="Fine Dining">Fine Dining</option>
+                            <option value="Casual Dining">Casual Dining</option>
+                            <option value="Café">Café</option>
+                            <option value="Bar">Bar</option>
+                        </select>
+                    </div>
+                    <div v-else class="badge badge-primary">{{ restaurant.filter_type }}</div>
                 </div>
                 <div class="card-body">
                     <div class="card-actions flex flex-col sm:flex-row">
@@ -74,11 +85,11 @@
                 jonathansReview: this.restaurant.jonathan_review,
                 valyasRating: this.restaurant.valyas_rating,
                 jonathansRating: this.restaurant.jonathans_rating,
+                filterType: this.restaurant.filter_type,
             };
         },
         methods: {
             closeModal() {
-                console.log('I am running');
                 this.$emit('modal', false);
             },
             async submit(id) {
@@ -87,6 +98,7 @@
                     jonathansReview: this.jonathansReview,
                     valyasRating: this.valyasRating,
                     jonathansRating: this.jonathansRating,
+                    filterType: this.filterType,
                 };
                 const {data} = await axios.put(`http://localhost:3000/update?id=${id}`, newChanges);
                 if (data) {
