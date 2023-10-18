@@ -15,7 +15,11 @@ app.get('/search', async (c) => {
     if (name) {
         try {
             const {data} = await axios.get(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${name}&key=AIzaSyCH6Og5niHx0mLXTNh0RGCuWGiiO7E8DaE`);
-            return c.json(data);
+            if (data) {
+                return c.json(data);
+            } else {
+                return c.json(false);
+            }
         } catch (error) {
             console.log('🚀 ~ file: index.ts:15 ~ app.post ~ error:', error);
             return c.json(error);
@@ -40,6 +44,9 @@ app.get('/all', async (c) => {
                 typeOfRestaurant,
             };
         });
+        if (!data) {
+            return c.json(false);
+        }
         return c.json(data);
     } catch (error) {
         console.log('🚀 ~ file: index.ts:34 ~ app.get ~ error:', error);
@@ -96,6 +103,8 @@ app.post('/save', async (c) => {
 
             if (result.affectedRows > 0) {
                 return c.json(true);
+            } else {
+                return c.json(false);
             }
         }
     } catch (error) {
@@ -122,7 +131,7 @@ app.put('/update', async (c) => {
     const data = await c.req.json();
     console.log('🚀 ~ file: index.ts:118 ~ app.put ~ data:', data);
     if (!data) {
-        return;
+        return c.json(false);
     }
     const res = await queryDB(`SELECT * FROM restaurants WHERE id = '${id}'`);
 
