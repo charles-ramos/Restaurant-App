@@ -24,8 +24,8 @@
                 <div class="mt-3">
                     <label for="filter">Filter: </label>
                     <div class="inline-block" v-if="restaurant.filter_type === null">
-                        <select name="filter option" id="filter" v-model="filterType">
-                            <option value="null">Select Filter</option>
+                        <select class="select select-bordered select-sm w-full max-w-xs" name="filter option" id="filter" v-model="filterType">
+                            <option disabled selected>Select Filter</option>
                             <option value="Fast Food">Fast Food</option>
                             <option value="Fine Dining">Fine Dining</option>
                             <option value="Casual Dining">Casual Dining</option>
@@ -100,6 +100,11 @@
                     jonathansRating: this.jonathansRating,
                     filterType: this.filterType,
                 };
+
+                if (newChanges.filterType === null) {
+                    console.log('please choose a filter ');
+                    return;
+                }
                 const {data} = await axios.put(`http://localhost:3000/update?id=${id}`, newChanges);
                 if (data) {
                     this.$emit('modal', false);

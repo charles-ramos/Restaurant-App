@@ -115,6 +115,7 @@ app.delete('/delete', async (c) => {
 app.put('/update', async (c) => {
     const {id} = c.req.query();
     const data = await c.req.json();
+    console.log('🚀 ~ file: index.ts:118 ~ app.put ~ data:', data);
     if (!data) {
         return;
     }
@@ -123,9 +124,14 @@ app.put('/update', async (c) => {
     if (res) {
         try {
             await queryDB(
-                `UPDATE restaurants SET valyas_rating = '${data.valyasRating}', jonathans_rating = '${data.jonathansRating}', jonathan_review = '${data.jonathansReview}', valya_review = '${data.valyasReview}', filter_type = '${data.filterType}'
-                WHERE id = '${id}'`
+                `UPDATE restaurants SET valyas_rating = ${data.valyasRating}, jonathans_rating = ${data.jonathansRating}, jonathan_review = '${data.jonathansReview}', valya_review = '${data.valyasReview}', filter_type = '${data.filterType}'
+                WHERE id = ${id}`
             );
+            // await queryDB(
+            //     `UPDATE restaurants SET ?
+            //     WHERE id = ${id}`,
+            //     data
+            // );
             return c.json(true);
         } catch (error) {
             console.log(error);
