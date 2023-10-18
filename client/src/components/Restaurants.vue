@@ -103,9 +103,11 @@
                 try {
                     const {data} = await axios.delete(`http://localhost:3000/delete?id=${id}`);
                     if (data) {
+                        this.$toast.success('Successfully deleted');
                         this.fetchRestaurants();
                     }
                 } catch (error) {
+                    this.$toast.error('Something went wrong');
                     console.log('🚀 ~ file: Restaurants.vue:107 ~ deleteRestaurant ~ error:', error);
                 }
             },

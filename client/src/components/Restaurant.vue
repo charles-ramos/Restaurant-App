@@ -64,7 +64,6 @@
                     </div>
                     <!-- <button class="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Submit</button> -->
                     <button @click="submit(restaurant.id)" class="btn btn-primary">Submit</button>
-                    
                 </div>
             </div>
         </div>
@@ -103,11 +102,13 @@
                 };
 
                 if (newChanges.filterType === null) {
-                    console.log('please choose a filter ');
+                    console.log('please choose a filter');
+                    this.$toast.error('Please choose a filter');
                     return;
                 }
                 const {data} = await axios.put(`http://localhost:3000/update?id=${id}`, newChanges);
                 if (data) {
+                    this.$toast.success('Successfully updated');
                     this.$emit('modal', false);
                 }
             },

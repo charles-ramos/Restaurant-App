@@ -38,6 +38,8 @@
     import axios from 'axios';
     import StarRating from 'vue-star-rating';
     import {mapActions} from 'vuex';
+    // import {useToast} from 'vue-toast-notification';
+    // const $toast = useToast();
     export default {
         data() {
             return {
@@ -81,9 +83,11 @@
                 if (data) {
                     this.showDropDown = false;
                     this.searchString = '';
+                    this.$toast.success('Restaurant saved successfully');
                     this.fetchRestaurants();
                 } else {
                     console.log('Error saving restaurant');
+                    this.$toast.error('Error saving restaurant');
                 }
             },
             closeDropdown() {
