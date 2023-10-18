@@ -63,6 +63,7 @@
                 </div>
                 <div>
                     <button class="btn" @click="openModal(restaurants[index])">Add Rating</button>
+                    <button class="btn danger" @click="deleteRestaurant(restaurants[index].id)">Delete</button>
                 </div>
             </div>
         </div>
@@ -97,6 +98,16 @@
             },
             handleModal(newModalState) {
                 this.showModal = newModalState;
+            },
+            async deleteRestaurant(id) {
+                try {
+                    const {data} = await axios.delete(`http://localhost:3000/delete?id=${id}`);
+                    if (data) {
+                        this.fetchRestaurants();
+                    }
+                } catch (error) {
+                    console.log('🚀 ~ file: Restaurants.vue:107 ~ deleteRestaurant ~ error:', error);
+                }
             },
         },
         computed: {

@@ -106,9 +106,14 @@ app.post('/save', async (c) => {
 
 // delete
 app.delete('/delete', async (c) => {
-    const name = c.req.query().name;
-    const search = queryDB(`DELETE FROM restaurants WHERE name = '${name.toLowerCase()}'`);
-    return c.json(search);
+    const id = c.req.query().id;
+    const getRestaurant = await queryDB(`SELECT * FROM restaurants WHERE id = '${id}'`);
+    if (getRestaurant) {
+        await queryDB(`DELETE FROM restaurants WHERE id = '${id}'`);
+        return c.json(true);
+    } else {
+        return c.json(false);
+    }
 });
 
 // update rating and comment of restaurant
@@ -127,11 +132,6 @@ app.put('/update', async (c) => {
                 `UPDATE restaurants SET valyas_rating = ${data.valyasRating}, jonathans_rating = ${data.jonathansRating}, jonathan_review = '${data.jonathansReview}', valya_review = '${data.valyasReview}', filter_type = '${data.filterType}'
                 WHERE id = ${id}`
             );
-            // await queryDB(
-            //     `UPDATE restaurants SET ?
-            //     WHERE id = ${id}`,
-            //     data
-            // );
             return c.json(true);
         } catch (error) {
             console.log(error);
