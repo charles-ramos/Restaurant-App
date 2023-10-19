@@ -5,7 +5,7 @@ import {cors} from 'hono/cors';
 
 const app = new Hono();
 
-const port = process.env.PORT || 3000;
+const port = 4000;
 
 app.use('/*', cors());
 
@@ -144,7 +144,7 @@ app.put('/update', async (c) => {
             return c.json(true);
         } catch (error) {
             console.log(error);
-            return c.json('error');
+            return c.json(false);
         }
     }
 });
