@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {createStore} from 'vuex';
-
+const serverUrl = 'https://ratethisraunt-3fj55vam.b4a.run/';
 export default createStore({
     state: {
         restaurants: [],
@@ -28,7 +28,8 @@ export default createStore({
     actions: {
         async fetchRestaurants({commit}) {
             try {
-                const {data} = await axios.get('http://localhost:3000/all'); // Replace with your API endpoint
+                const {data} = await axios.get(`${serverUrl}all`);
+
                 commit('setItems', data);
             } catch (error) {
                 console.error('An error occurred while fetching data:', error);
