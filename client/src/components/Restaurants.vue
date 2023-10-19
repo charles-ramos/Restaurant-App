@@ -1,6 +1,7 @@
 <template>
     <div>
         <!-- loop goes here -->
+        <button @click="installPWA">install</button>
         <div class="card w-96 bg-base-100 shadow-xl" v-for="(restaurant, index) in restaurants" :key="index">
             <figure>
                 <img
@@ -88,6 +89,7 @@
             return {
                 showModal: false,
                 selectedRestaurant: null,
+                deferredPrompt: null,
             };
         },
         methods: {
@@ -111,12 +113,39 @@
                     console.log('🚀 ~ file: Restaurants.vue:107 ~ deleteRestaurant ~ error:', error);
                 }
             },
+            async installPWA() {
+                // Show your customized install prompt for your PWA
+                // Your own UI doesn't have to be a single element, you
+                // can have buttons in different locations, or wait to prompt
+                // as part of a critical journey.
+
+                // deferredPrompt is a global variable we've been using in the sample to capture the `beforeinstallevent`
+                // this.deferredPrompt.prompt();
+                console.log(this.deferredPrompt);
+                // Find out whether the user confirmed the installation or not
+                const {outcome} = await this.deferredPrompt.userChoice;
+                // The deferredPrompt can only be used once.
+                this.deferredPrompt = null;
+                // Act on the user's choice
+                if (outcome === 'accepted') {
+                    console.log('User accepted the install prompt.');
+                } else if (outcome === 'dismissed') {
+                    console.log('User dismissed the install prompt');
+                }
+            },
         },
         computed: {
             ...mapState(['restaurants']),
         },
         mounted() {
             this.fetchRestaurants();
+            window.addEventListener('beforeinstallprompt', async (e) => {
+                console.log(e);
+                // Prevents the default mini-infobar or install dialog from appearing on mobile
+                // e.preventDefault();
+                // Save the event because you'll need to trigger it later.
+                this.deferredPrompt = e;
+            });
         },
         watch: {
             showModal(newModalState) {

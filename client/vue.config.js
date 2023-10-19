@@ -1,8 +1,11 @@
-export const devServer = {
-    proxy: {
-        '/': {
-            target: 'http://localhost:3000',
-            changeOrigin: true,
-        },
+const {InjectManifest} = require('workbox-webpack-plugin');
+
+module.exports = {
+    configureWebpack: {
+        plugins: [
+            new InjectManifest({
+                swSrc: './src/service-worker.js',
+            }),
+        ],
     },
 };

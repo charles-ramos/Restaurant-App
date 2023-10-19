@@ -22,7 +22,8 @@
         "@vitejs/plugin-vue": "^4.2.3",
         "daisyui": "^3.8.3",
         "vite": "^4.4.5",
-        "vue-cli-plugin-tailwind": "~3.0.0"
+        "vue-cli-plugin-tailwind": "~3.0.0",
+        "workbox-webpack-plugin": "^7.0.0"
     },
     "type": "module"
 }
